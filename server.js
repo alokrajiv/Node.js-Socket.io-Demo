@@ -1,8 +1,9 @@
 var app = require('express')();
 var server = require('http').Server(app);
+var port = process.env.PORT || 1337;
 var io = require('socket.io')(server);
 app.use(require('body-parser')());
-server.listen(8080);
+server.listen(port);
 var missions = [
             {
                 id: 0,
@@ -76,6 +77,9 @@ var missions = [
             }
         ];
         
+app.get('/', function (req, res) {
+  res.json({messg: "Hello World"});
+});
 app.get('/missions', function (req, res) {
   res.json({data: missions});
 });
