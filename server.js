@@ -95,3 +95,5 @@ io.on('connection', function(socket) {
     });
 });
 
+io.set('transports', ['websocket', 'xhr-polling', 'jsonp-polling', 'htmlfile', 'flashsocket']);
+io.set('origins', '*:*');
