@@ -68,7 +68,7 @@ var missions = [
 ];
 
 app.get('/', function(req, res) {
-    res.json(messg: 'HELLO WORLD');
+    res.json({messg: 'HELLO WORLD'});
 });
 app.get('/missions', function(req, res) {
     res.json({ data: missions });
