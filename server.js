@@ -88,6 +88,6 @@ app.post('/missions', function(req, res) {
 io.on('connection', function(socket) {
     socket.emit('news', { hello: 'world' });
     socket.on('channel1', function(data) {
-        socket.emit('channel1', data);
+        socket.broadcast.emit('channel1', data);
     });
 });
