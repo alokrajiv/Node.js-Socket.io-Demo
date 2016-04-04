@@ -68,7 +68,14 @@ var missions = [
 ];
 
 app.get('/', function(req, res) {
-    res.json({ messg: "Hello World" });
+    res.send("<script src='/socket.io/socket.io.js'></script>\
+<script>\
+  var socket = io('http://localhost:1337');\
+  socket.on('news', function (data) {\
+    console.log(data);\
+    socket.emit('my other event', { my: 'data' });\
+  });\
+</script>");
 });
 app.get('/missions', function(req, res) {
     res.json({ data: missions });
@@ -78,12 +85,9 @@ app.post('/missions', function(req, res) {
     res.json(missions);
 });
 
-io.on('connection', function(socket) {
-    socket.on('chat message', function(msg) {
-        socket.emit(msg);
-        console.log('message: ' + msg);
-    });
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
 });
-
-io.set('transports', ['websocket', 'xhr-polling', 'jsonp-polling', 'htmlfile', 'flashsocket']);
-io.set('origins', '*:*');
