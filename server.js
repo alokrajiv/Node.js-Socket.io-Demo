@@ -68,14 +68,7 @@ var missions = [
 ];
 
 app.get('/', function(req, res) {
-    res.send("<script src='/socket.io/socket.io.js'></script>\
-<script>\
-  var socket = io('http://localhost:1337');\
-  socket.on('news', function (data) {\
-    console.log(data);\
-    socket.emit('my other event', { my: 'data' });\
-  });\
-</script>");
+    res.json(messg: 'HELLO WORLD');
 });
 app.get('/missions', function(req, res) {
     res.json({ data: missions });
@@ -86,7 +79,6 @@ app.post('/missions', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-    socket.emit('news', { hello: 'world' });
     socket.on('channel1', function(data) {
         socket.broadcast.emit('channel1', data);
     });
