@@ -85,9 +85,9 @@ app.post('/missions', function(req, res) {
     res.json(missions);
 });
 
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+io.on('connection', function(socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('channel1', function(data) {
+        socket.emit('channel1', data);
+    });
 });
