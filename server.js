@@ -80,6 +80,7 @@ io.on('connection', function(socket) {
     socket.on('requestDataMissionChat', function(data, callback) {
         for(var i=0; i<missions.length; i++){
             if(missions[i].id == data.missionId){
+                console.warn(missions[i]);
                 var data = missions[i].messagePipe.show();
                 callback({}, { data: data });
                 break;
