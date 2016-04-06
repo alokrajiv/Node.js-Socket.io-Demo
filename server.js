@@ -71,12 +71,12 @@ app.post('/missions', function(req, res) {
 io.on('connection', function(socket) {
     socket.on('requestDataMissions', function(data, callback) {
         var missionsToSend = []
-        missions.forEach(function(mission){
-            var tmp = mission
-            //delete tmp.messagePipe;
-            missionsToSend.push(tmp);
+        var tmp = missions.splice();
+        tmp.forEach(function(mission){
+            delete mission.messagePipe;
+            //mission is copy by ref and not clone not recopy required
         })
-        callback({}, { data: missionsToSend });
+        callback({}, { data: tmp });
     });
     socket.on('requestDataMissionChat', function(data, callback) {
         for(var i=0; i<missions.length; i++){
