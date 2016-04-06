@@ -4,31 +4,99 @@ var port = process.env.PORT || 1337;
 var io = require('socket.io')(server);
 app.use(require('body-parser')());
 server.listen(port);
+
+
+//--start-->BufferPipe datatype
+function BufferPipe() {
+    this._maxSize = 10;
+    this._storage = [];
+}
+
+BufferPipe.prototype.in = function(data) {
+    var size = ++this._size;
+    this._storage.push(data);
+    if (this._storage.length > this._maxSize)
+        this._storage.shift();
+};
+BufferPipe.prototype.show = function() {
+    return this._storage;
+};
+//--end-->BufferPipe datatype
+
+
 var missions = [
     {
         id: 0,
         name: 'MISSION Microsoft Azure',
         descr: 'Survey?',
-        logo: 'images/ben.png'
+        logo: 'images/ben.png',
+        messagePipe: new BufferPipe()
     },
     {
         id: 1,
         name: 'MISSION Elon Musk',
         descr: 'AMA (Q/A)',
-        logo: 'images/max.png'
+        logo: 'images/max.png',
+        messagePipe: new BufferPipe()
     },
     {
         id: 2,
         name: 'MISSION Startup Weekend',
         descr: '2 Questions',
-        logo: 'images/adam.jpg'
+        logo: 'images/adam.jpg',
+        messagePipe: new BufferPipe()
     },
     {
         id: 3,
         name: 'MISSION UAE',
         descr: 'Expo 2020 New Ideas!',
-        logo: 'images/perry.png'
-    },
+        logo: 'images/perry.png',
+        messagePipe: new BufferPipe()
+    }
+];
+
+
+
+app.get('/', function(req, res) {
+    res.json({ messg: 'HELLO WORLD' });
+});
+app.get('/missions', function(req, res) {
+    res.json({ data: missions });
+});
+app.post('/missions', function(req, res) {
+    missions = req.body.data;
+    res.json(missions);
+});
+
+io.on('connection', function(socket) {
+    socket.on('requestDataMissions', function(data, callback) {
+        callback({}, { data: missions });
+    });
+    socket.on('requestDataMissionChat', function(data, callback) {
+        for(var i=0; i<missions.length; i++){
+            if(missions[i].id == data.missionId){
+                var data = missions[i].messagePipe.show();
+                callback({}, { data: data });
+                break;
+            }
+        }
+    });
+    
+    socket.on('channel1', function(data) {
+        socket.broadcast.emit('channel1', data);
+        for(var i=0; i<missions.length; i++){
+            if(missions[i].id == data.missionId){
+                missions[i].messagePipe.in(data);
+                break;
+            }
+        }
+    });
+});
+
+
+
+/*
+,
     {
         id: 4,
         name: 'MISSION Mastermind',
@@ -65,25 +133,4 @@ var missions = [
         descr: 'New TV Show? What do you think of the script?',
         logo: 'images/mike.png'
     }
-];
-
-app.get('/', function(req, res) {
-    res.json({messg: 'HELLO WORLD'});
-});
-app.get('/missions', function(req, res) {
-    res.json({ data: missions });
-});
-app.post('/missions', function(req, res) {
-    missions = req.body.data;
-    res.json(missions);
-});
-
-io.on('connection', function(socket) {
-    socket.on('requestDataMissions', function(data, callback) {
-        console.log("mooo");
-        callback({}, { data: missions });
-    });
-    socket.on('channel1', function(data) {
-        socket.broadcast.emit('channel1', data);
-    });
-});
+    */
