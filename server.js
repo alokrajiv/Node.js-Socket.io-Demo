@@ -87,6 +87,7 @@ io.on('connection', function(socket) {
         }
     });
     socket.on('requestStoreMission', function(data, callback) {
+        console.warn(data);
         var tmp = data.mission;
         tmp.messagePipe = new BufferPipe();
         missions.push(tmp);
