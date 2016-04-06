@@ -70,7 +70,12 @@ app.post('/missions', function(req, res) {
 
 io.on('connection', function(socket) {
     socket.on('requestDataMissions', function(data, callback) {
-        callback({}, { data: missions });
+        var missionsToSend = []
+        missions.forEach(function(mission){
+            delete mission.messagePipe;
+            missionsToSend.push(mission);
+        })
+        callback({}, { data: missionsToSend });
     });
     socket.on('requestDataMissionChat', function(data, callback) {
         for(var i=0; i<missions.length; i++){
@@ -81,7 +86,12 @@ io.on('connection', function(socket) {
             }
         }
     });
-    
+    socket.on('requestStoreMission', function(data, callback) {
+        var tmp = data.mission;
+        tmp.messagePipe = new BufferPipe();
+        missions.push(tmp);
+        callback({}, { status: 'ok' });
+    });
     socket.on('channel1', function(data) {
         socket.broadcast.emit('channel1', data);
         for(var i=0; i<missions.length; i++){
