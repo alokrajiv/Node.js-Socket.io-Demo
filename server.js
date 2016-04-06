@@ -50,7 +50,7 @@ var missions = [
         id: 3,
         name: 'MISSION UAE',
         descr: 'Expo 2020 New Ideas!',
-        logo: 'images/perry.png',
+        logo: 'images/mike.png',
         messagePipe: new BufferPipe()
     }
 ];
