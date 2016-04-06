@@ -73,7 +73,7 @@ io.on('connection', function(socket) {
         var missionsToSend = []
         missions.forEach(function(mission){
             var tmp = mission
-            delete tmp.messagePipe;
+            //delete tmp.messagePipe;
             missionsToSend.push(tmp);
         })
         callback({}, { data: missionsToSend });
