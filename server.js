@@ -79,9 +79,9 @@ app.post('/missions', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-    socket.on('requestDataMissions', function(data) {
+    socket.on('requestDataMissions', function(data, callback) {
         console.log("mooo");
-        this.emit('requestDataMissions',{ data: missions });
+        callback({}, { data: missions });
     });
     socket.on('channel1', function(data) {
         socket.broadcast.emit('channel1', data);
