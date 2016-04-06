@@ -90,6 +90,7 @@ io.on('connection', function(socket) {
         var tmp = data.mission;
         tmp.messagePipe = new BufferPipe();
         missions.push(tmp);
+        socket.emit('dev','got new store request: '+JSON.stringify(tmp));
         callback({}, { status: 'ok' });
     });
     socket.on('channel1', function(data) {
