@@ -70,18 +70,21 @@ app.post('/missions', function(req, res) {
 
 io.on('connection', function(socket) {
     socket.on('requestDataMissions', function(data, callback) {
-        var missionsToSend = []
-        var tmp = missions.splice();
-        tmp.forEach(function(mission){
-            delete mission.messagePipe;
-            //mission is copy by ref and not clone not recopy required
+        var missionsToSend = [];
+        missions.forEach(function(mission) {
+            missionsToSend.push({
+                id: mission.id,
+                name: mission.name,
+                descr: mission.descr,
+                logo: mission.logo,
+            })
         })
-        callback({}, { data: tmp });
+        callback({}, { data: missionsToSend });
     });
     socket.on('requestDataMissionChat', function(data, callback) {
-        for(var i=0; i<missions.length; i++){
-                console.warn(missions[i]);
-            if(missions[i].id == data.missionId){
+        for (var i = 0; i < missions.length; i++) {
+            console.warn(missions[i]);
+            if (missions[i].id == data.missionId) {
                 var data = missions[i].messagePipe.show();
                 callback({}, { data: data });
                 break;
@@ -93,13 +96,13 @@ io.on('connection', function(socket) {
         tmp.messagePipe = new BufferPipe();
         console.warn(tmp);
         missions.push(tmp);
-        socket.emit('dev','got new store request: '+JSON.stringify(tmp));
+        socket.emit('dev', 'got new store request: ' + JSON.stringify(tmp));
         callback({}, { status: 'ok' });
     });
     socket.on('channel1', function(data) {
         socket.broadcast.emit('channel1', data);
-        for(var i=0; i<missions.length; i++){
-            if(missions[i].id == data.missionId){
+        for (var i = 0; i < missions.length; i++) {
+            if (missions[i].id == data.missionId) {
                 missions[i].messagePipe.in(data);
                 break;
             }
