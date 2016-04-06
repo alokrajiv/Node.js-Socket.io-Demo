@@ -88,8 +88,8 @@ io.on('connection', function(socket) {
     });
     socket.on('requestStoreMission', function(data, callback) {
         var tmp = data.mission;
-        console.warn(tmp);
         tmp.messagePipe = new BufferPipe();
+        console.warn(tmp);
         missions.push(tmp);
         socket.emit('dev','got new store request: '+JSON.stringify(tmp));
         callback({}, { status: 'ok' });
