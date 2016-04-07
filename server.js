@@ -99,6 +99,20 @@ io.on('connection', function(socket) {
         socket.emit('dev', 'got new store request: ' + JSON.stringify(tmp));
         callback({}, { status: 'ok' });
     });
+    socket.on('requestRemoveMission', function(data, callback) {
+        var id = data.mission.id;
+        for (var i = 0; i < missions.length; i++) {
+            if (missions[i].id == id) {
+                var res = { status: 'fail' };
+                if (i > -1) {
+                    missions.splice(i, 1);
+                    res.status = 'ok';
+                }
+                callback({}, { status: 'ok' });
+                break;
+            }
+        }
+    });
     socket.on('channel1', function(data) {
         socket.broadcast.emit('channel1', data);
         for (var i = 0; i < missions.length; i++) {
