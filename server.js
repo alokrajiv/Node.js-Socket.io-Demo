@@ -96,8 +96,8 @@ io.on('connection', function(socket) {
         tmp.messagePipe = new BufferPipe();
         console.warn(tmp);
         missions.push(tmp);
-        socket.emit('dev', 'got new store request: ' + JSON.stringify(tmp));
         callback({}, { status: 'ok' });
+        socket.emit('refreshChannel', { label: 'missionsList' });
     });
     socket.on('requestRemoveMission', function(data, callback) {
         var id = data.mission.id;
@@ -109,6 +109,7 @@ io.on('connection', function(socket) {
                     res.status = 'ok';
                 }
                 callback({}, { status: 'ok' });
+                socket.emit('refreshChannel', { label: 'missionsList' });
                 break;
             }
         }
