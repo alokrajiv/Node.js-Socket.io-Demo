@@ -97,7 +97,7 @@ io.on('connection', function(socket) {
         console.warn(tmp);
         missions.push(tmp);
         callback({}, { status: 'ok' });
-        socket.emit('refreshChannel', { label: 'missionsList' });
+        io.emit('refreshChannel', { label: 'missionsList' });
     });
     socket.on('requestRemoveMission', function(data, callback) {
         var id = data.mission.id;
@@ -109,7 +109,7 @@ io.on('connection', function(socket) {
                     res.status = 'ok';
                 }
                 callback({}, { status: 'ok' });
-                socket.emit('refreshChannel', { label: 'missionsList' });
+                io.emit('refreshChannel', { label: 'missionsList' });
                 break;
             }
         }
